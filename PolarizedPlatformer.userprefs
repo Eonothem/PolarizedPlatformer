@@ -1,0 +1,16 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\ExampleClass.cs">
+    <Files>
+      <File FileName="Assets\LevelManager.cs" Line="5" Column="44" />
+      <File FileName="Assets\ChildPlatform.cs" Line="9" Column="6" />
+      <File FileName="Assets\ParentPlatform.cs" Line="87" Column="107" />
+      <File FileName="Assets\IPolarizeable.cs" Line="6" Column="3" />
+      <File FileName="Assets\ExampleClass.cs" Line="7" Column="2" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
