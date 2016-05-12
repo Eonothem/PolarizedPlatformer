@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ExampleClass : MonoBehaviour {
+public class Player : MonoBehaviour, IDamageable {
 
+    public int health = 1;
 	public float maxSpeed = 10f;
 	bool facingRight = true;
 	Rigidbody2D rigid;
@@ -12,12 +13,14 @@ public class ExampleClass : MonoBehaviour {
 	public LayerMask whatIsGround;
 	bool onPlatform = false;
 	GameObject currentPlat = null;
+
+    //HealthManager hm = null;
 	
 	// Use this for initialization
 	void Start () {
 		rigid = GetComponent<Rigidbody2D> ();
-
-	}
+        //hm = gameObject.GetComponent<HealthManager>();
+    }
 	
 	void Update () {
 	}
@@ -73,6 +76,23 @@ public class ExampleClass : MonoBehaviour {
             transform.parent = null;
 		}
 	}
-	
-	
+
+    void OnTriggerStay2D(Collision2D coll) {
+        if (coll.gameObject.tag == "Hazard") {
+            StageHazard haz = coll.gameObject.GetComponent<StageHazard>();
+            damage(haz.damage);
+        }
+    }
+
+    public void damage(int damage) {
+        health -= damage;
+        if (health <= 0) {
+            health = 0;
+            kill();
+        }
+    }
+
+    public void kill() {
+        //death stuff
+    }
 } 
