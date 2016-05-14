@@ -18,54 +18,35 @@ public class Player : MonoBehaviour, IDamageable {
 	
 	// Use this for initialization
 	void Start () {
-		//collide = GetComponent<BoxCollider2D> ();
 		rigid = GetComponent<Rigidbody2D> ();
         //hm = gameObject.GetComponent<HealthManager>();
     }
 	
-	// Update is called once per frame
 	void Update () {
-		//if (Input.GetKey (KeyCode.A)) {
-		//	movex = -1;
-		//} else if (Input.GetKey (KeyCode.D)) {
-		//	movex = 1;
-		//} else {
-		//	movex = 0;
-		//}
-		//if (Input.GetKey (KeyCode.W))
-			//GetComponent<Rigidbody2D>().AddForce(new Vector2(0,100));
-		//else
-			//movey = 0;
 	}
 	
 	void FixedUpdate ()
 	{
+		//Checks if we hit the ground or not using bounding box magic
 		BoxCollider2D bc = transform.GetComponentInParent<BoxCollider2D> ();
-		//Debug.Log (bc.bounds.extents.x);
 		float groundHeight = 1f;
 		grounded = Physics2D.OverlapArea (new Vector2 (transform.position.x-bc.bounds.extents.x, transform.position.y), new Vector2 (transform.position.x+bc.bounds.extents.x, transform.position.y-groundHeight), whatIsGround);
-		//grounded = Physics2D.OverlapCircle (groundCheck.position, groundRadius, whatIsGround);
-		//Debug.Log (transform.position.x + bc.bounds.extents.x);
-		//Debug.Log (grounded);
-		//Vector2 prevVelocity = GetComponent<Rigidbody2D> ().velocity;
-		//GetComponent<Rigidbody2D> ().velocity = new Vector2 (movex*Speed, prevVelocity.y);
+		
+
+		//Get Input
 		float move = Input.GetAxis ("Horizontal");
 
-		float platformAddX = 0;
-		float platformAddY = 0;
-
+		//Jump
 		if (Input.GetKeyDown (KeyCode.Space) && grounded) {
 			rigid.velocity = new Vector2(rigid.velocity.x, 10);
 		}
 
-		if (onPlatform) {
-			platformAddX = currentPlat.GetComponent<Rigidbody2D>().velocity.x;
-		}
+		//Move left and right and be affected by gravity
+		rigid.velocity = new Vector2 (move*maxSpeed, rigid.velocity.y);
 
-		rigid.velocity = new Vector2 (move*maxSpeed+platformAddX, rigid.velocity.y);
-
+		//Change direction
 		if (move > 0 && !facingRight) {
-				flip();
+			flip();
 		}else if(move < 0 && facingRight){
 			flip();
 		}
@@ -79,18 +60,20 @@ public class Player : MonoBehaviour, IDamageable {
 	}
 
 	void OnCollisionEnter2D(Collision2D coll) {
+		//When we fall on a platform, parent our character to it so that it moves along with the platform
 		if (coll.gameObject.tag == "Platform") {
 			currentPlat = coll.gameObject;
 			onPlatform = true;
-			//Debug.Log("PLat");
+           transform.parent = coll.gameObject.transform;
 		}
 	}
 
 	void OnCollisionExit2D(Collision2D coll) {
+		//When we leave the platform, unparent
 		if (coll.gameObject.tag == "Platform") {
 			currentPlat = null;
 			onPlatform = false;
-			//Debug.Log("PsdfsLat");
+            transform.parent = null;
 		}
 	}
 
