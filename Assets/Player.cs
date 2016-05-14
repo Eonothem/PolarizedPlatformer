@@ -94,7 +94,7 @@ public class Player : MonoBehaviour, IDamageable {
 		}
 	}
 
-    void OnTriggerStay2D(Collision2D coll) {
+    void OnTriggerEnter2D(Collider2D coll) {
         if (coll.gameObject.tag == "Hazard") {
             StageHazard haz = coll.gameObject.GetComponent<StageHazard>();
             damage(haz.damage);
@@ -103,6 +103,7 @@ public class Player : MonoBehaviour, IDamageable {
 
     public void damage(int damage) {
         health -= damage;
+        Debug.Log("Took " + damage + " damage");
         if (health <= 0) {
             health = 0;
             kill();

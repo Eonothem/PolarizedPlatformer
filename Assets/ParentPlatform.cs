@@ -47,7 +47,7 @@ public class ParentPlatform : MonoBehaviour {
     public void getPolarized()
     {
         int filterMode = LevelManager.getInstance().getFilterMode();
-        Debug.Log(filterMode);
+        //Debug.Log(filterMode);
 
         if (filterMode == 1)
         {

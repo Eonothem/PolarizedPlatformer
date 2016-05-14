@@ -14,7 +14,7 @@ public class StageHazard : MonoBehaviour {
 
     public int damage;
 
-    void OnCollisionEnter2D(Collision2D coll) {
+    void OnTriggerEnter2D(Collider2D coll) {
         //HealthManager hm = coll.gameObject.GetComponent<HealthManager>();
         //hm.damage(damage);
     }
