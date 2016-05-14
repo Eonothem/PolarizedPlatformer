@@ -26,7 +26,8 @@ public class Player : MonoBehaviour, IDamageable {
 	}
 	
 	void FixedUpdate ()
-	{
+	{	
+		Debug.Log (grounded);
 		//Checks if we hit the ground or not using bounding box magic
 		BoxCollider2D bc = transform.GetComponentInParent<BoxCollider2D> ();
 		float groundHeight = 1f;
