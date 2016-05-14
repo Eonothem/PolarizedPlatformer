@@ -52,16 +52,13 @@ public class ParentPlatform: MonoBehaviour, IPolarizeable{
 
     public void onNotifyPolarize(int polarizeMode)
     {
-<<<<<<< HEAD
         int filterMode = LevelManager.getInstance().getFilterMode();
         //Debug.Log(filterMode);
-=======
         //Kill all shadows
         //Remove player parenting
         Debug.Log(polarizeMode);
         Transform shadowPlatform = masterPlatform.Find("Shadow(Clone)");
         gameObject.GetComponent<SpriteRenderer>().color = new Color(255f, 0f, 0f, 1f);
->>>>>>> origin/master
 
         if (shadowPlatform != null)
         {

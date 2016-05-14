@@ -78,6 +78,7 @@ public class Player : MonoBehaviour, IDamageable {
 	}
 
     void OnTriggerEnter2D(Collider2D coll) {
+        Debug.Log("Player collided with something");
         if (coll.gameObject.tag == "Hazard") {
             StageHazard haz = coll.gameObject.GetComponent<StageHazard>();
             damage(haz.damage);
