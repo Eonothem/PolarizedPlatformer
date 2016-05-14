@@ -3,7 +3,8 @@ using System.Collections;
 
 public class Player : MonoBehaviour, IDamageable {
 
-    public int health = 1;
+    public const int maxHealth = 3;
+    int health = maxHealth;
 	public float maxSpeed = 10f;
 	bool facingRight = true;
 	Rigidbody2D rigid;
@@ -13,6 +14,7 @@ public class Player : MonoBehaviour, IDamageable {
 	public LayerMask whatIsGround;
 	bool onPlatform = false;
 	GameObject currentPlat = null;
+    public Vector2 respawn = new Vector2((float)-9.5, (float)-2.1);
 
     //HealthManager hm = null;
 	
@@ -27,7 +29,7 @@ public class Player : MonoBehaviour, IDamageable {
 	
 	void FixedUpdate ()
 	{	
-		Debug.Log (grounded);
+		//Debug.Log (grounded);
 		//Checks if we hit the ground or not using bounding box magic
 		BoxCollider2D bc = transform.GetComponentInParent<BoxCollider2D> ();
 		float groundHeight = 1f;
@@ -96,6 +98,10 @@ public class Player : MonoBehaviour, IDamageable {
     }
 
     public void kill() {
-        //death stuff
+        Debug.Log("Died!");
+        transform.position = respawn;
+        rigid.velocity.Set(0, 0);
+
+        health = maxHealth;
     }
 } 
