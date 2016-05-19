@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class ParentPlatform: MonoBehaviour, IPolarizeable{
+public class ParentPlatformWaypoint: MonoBehaviour, IPolarizeable{
     private int IGNORE_PLAYER_MASK_FLAG = -257;
     
 
@@ -27,14 +27,16 @@ public class ParentPlatform: MonoBehaviour, IPolarizeable{
 	// Update is called once per frame
 	void Update () {
 
+        Debug.Log(isAtTarget());
 
-		//Make the path go to each waypoint target linearly, forever
+        //Make the path go to each waypoint target linearly, forever
         float step = speed * Time.deltaTime;
 
         transform.position = Vector2.MoveTowards(transform.position, currentWaypointTarget.position, step);
 
         if (isAtTarget())
         {
+            Debug.Log("AAAA");
             if (currentWaypointTargetNum + 1 == waypoints.Count)
             {
                 currentWaypointTargetNum = 0;
@@ -89,7 +91,9 @@ public class ParentPlatform: MonoBehaviour, IPolarizeable{
 	//Might have to add errorbands in the future if we lerp the platform instead of directly just going to it
     bool isAtTarget()
     {
-        return transform.position.x == currentWaypointTarget.position.x && transform.position.y == currentWaypointTarget.position.y;
+        float errorband = 0.02f;
+        //return transform.position.x == currentWaypointTarget.position.x && transform.position.y == currentWaypointTarget.position.y;
+        return Mathf.Abs(transform.position.x - currentWaypointTarget.position.x) < errorband && Mathf.Abs(transform.position.y - currentWaypointTarget.position.y) < errorband;
     }
 
 	/*
