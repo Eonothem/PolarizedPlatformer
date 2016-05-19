@@ -35,7 +35,7 @@ public class ParentPlatformParametric : MonoBehaviour, IPolarizeable {
         float step = speed * Time.deltaTime;
         stepInc += step;
 
-        transform.localPosition = new Vector2(xamp * Mathf.Cos(xfreq * stepInc + xphase) + xshift, yamp * Mathf.Sin(yfreq * stepInc + yphase) + yshift);
+        transform.localPosition = new Vector2(xamp * Mathf.Cos(xfreq * stepInc + xphase*Mathf.PI) + xshift, yamp * Mathf.Sin(yfreq * stepInc + yphase*Mathf.PI) + yshift);
     }
 
     public void onNotifyPolarize(int polarizeMode) {
