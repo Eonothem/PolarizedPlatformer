@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
 
 
 public class ParentPlatformParametric : MonoBehaviour, IPolarizeable {
@@ -11,6 +13,7 @@ public class ParentPlatformParametric : MonoBehaviour, IPolarizeable {
     public GameObject shadowPrefab;
     float stepInc = 0f;
 
+	public float morphSpeed = 0.5f;
     public float xamp;
     public float xfreq = 1;
     public float xphase;
@@ -20,9 +23,17 @@ public class ParentPlatformParametric : MonoBehaviour, IPolarizeable {
     public float yphase;
     public float yshift;
 
+	private float[] initCondictions;
+	private float[] currentConditions;
+	private float[] futureConditions;
+
     // Use this for initialization
     void Start() {
         LevelManager.getInstance().addPolarizeable(this as IPolarizeable);
+		initCondictions = new float[] {speed, xamp, xfreq, xphase, xshift, yamp, yfreq, yphase, yshift };
+		currentConditions = (float[]) initCondictions.Clone();
+		futureConditions = (float[]) initCondictions.Clone();
+		//futureConditions [6] = 1f;
     }
 
 
@@ -32,11 +43,44 @@ public class ParentPlatformParametric : MonoBehaviour, IPolarizeable {
         // Debug.Log(isAtTarget());
 
         //Make the path go to each waypoint target linearly, forever
-        float step = speed * Time.deltaTime;
+		float step = currentConditions[0]* Time.deltaTime;
         stepInc += step;
 
-        transform.localPosition = new Vector2(xamp * Mathf.Cos(xfreq * stepInc + xphase*Mathf.PI) + xshift, yamp * Mathf.Sin(yfreq * stepInc + yphase*Mathf.PI) + yshift);
+		transform.localPosition = new Vector2(currentConditions[1]*Mathf.Cos(currentConditions[2] * stepInc + currentConditions[3]*Mathf.PI) + currentConditions[4],
+			currentConditions[5] * Mathf.Sin(currentConditions[6] * stepInc + currentConditions[7]*Mathf.PI) + currentConditions[8]);
+
+
+		//Morphing!
+		//If you need to morph the path of a platform, keep it resonable, or else it gets real bad real fast :P
+		//So try and keep the general shape of the path the same
+		//Morph speed is how fast the morph is
+		if (!Enumerable.SequenceEqual(currentConditions,futureConditions)) {
+			
+			for(int i = 0; i < currentConditions.Length; i++) {
+				
+				currentConditions [i] = Mathf.SmoothStep(currentConditions[i], futureConditions [i], Time.deltaTime*morphSpeed);
+				if (Mathf.Abs(currentConditions [i] - futureConditions [i]) < 0.001f) {
+					currentConditions [i] = futureConditions [i];
+					//Debug.Log ("morphing complete");
+				}
+			}
+			//Debug.Log("MEMEE");
+		}
+		//Debug.Log (currentConditions[1]);
+		//Debug.Log (morphSpeed);
     }
+
+	public void reset(){
+		futureConditions = initCondictions;
+	}
+
+	public void modify(float[] conditions){
+		//Debug.Log ("AAAA");
+		//yamp = Mathf.Lerp(yamp, 20f, 0.2f);
+		//yamp = 9;
+		//futr
+		futureConditions = conditions;
+	}
 
     public void onNotifyPolarize(int polarizeMode) {
         int filterMode = LevelManager.getInstance().getFilterMode();
@@ -66,53 +110,4 @@ public class ParentPlatformParametric : MonoBehaviour, IPolarizeable {
             gameObject.GetComponent<PlatformEffector2D>().colliderMask = -1;
         }
     }
-
-   
-
-    /*
-    public void getPolarized()
-    {
-        int filterMode = LevelManager.getInstance().getFilterMode();
-        //Debug.Log(filterMode);
-        //Debug.Log(gameObject.GetComponent<PlatformEffector2D>().colliderMask);
-        if (filterMode == 1)
-        {
-            if (masterPlatform.Find("Shadow(Clone)") == null)
-            {
-                GameObject shadowPlatform = (GameObject)Instantiate(shadowPrefab, transform.position, Quaternion.identity);
-                
-                shadowPlatform.GetComponent<ChildPlatform>().parentPlatform = transform;
-                shadowPlatform.GetComponent<ChildPlatform>().type = 1;
-                shadowPlatform.transform.parent = masterPlatform;
-                gameObject.GetComponent<PlatformEffector2D>().colliderMask = IGNORE_PLAYER_MASK_FLAG;
-            }
-        }else if (filterMode == 0)
-        {
-            gameObject.GetComponent<PlatformEffector2D>().colliderMask = -1;
-            Transform horizontalShadow = masterPlatform.Find("Shadow(Clone)");
-            
-            if(horizontalShadow != null){
-                
-                if (horizontalShadow.Find("Player") != null)
-                {
-                    horizontalShadow.Find("Player").parent = null;
-                }
-
-                Destroy(horizontalShadow.gameObject);
-            }
-
-        }
-        else if (filterMode == 2)
-        {
-            if (masterPlatform.Find("Shadow(Clone)") == null)
-            {
-                GameObject shadowPlatform = (GameObject)Instantiate(shadowPrefab, transform.position, Quaternion.identity);
-                shadowPlatform.GetComponent<ChildPlatform>().parentPlatform = transform;
-                shadowPlatform.GetComponent<ChildPlatform>().type = 2;
-                shadowPlatform.transform.parent = masterPlatform;
-                gameObject.GetComponent<PlatformEffector2D>().colliderMask = IGNORE_PLAYER_MASK_FLAG;
-            }
-        }
-    }
-    */
 }
