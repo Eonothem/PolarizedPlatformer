@@ -14,13 +14,13 @@ public class ParametricPlatformTrigger : MonoBehaviour {
 	public float yfreq = 1;
 	public float yphase;
 	public float yshift;
-	private float[] initCondictions;
+	private float[] initConditions;
 
 	// Use this for initialization
 	void Start () {
 		pController = platform.GetComponent<ParentPlatformParametric>();
 
-		initCondictions = new float[] {speed, xamp, xfreq, xphase, xshift, yamp, yfreq, yphase, yshift };
+		initConditions = new float[] {speed, xamp, xfreq, xphase, xshift, yamp, yfreq, yphase, yshift };
 	}
 	
 	// Update is called once per frame
@@ -30,7 +30,7 @@ public class ParametricPlatformTrigger : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D coll) {
 		Debug.Log("Modifying Platform");
-		pController.modify(initCondictions);
+		pController.modify(initConditions);
 	}
 
 	void OnTriggerExit2D(Collider2D coll) {

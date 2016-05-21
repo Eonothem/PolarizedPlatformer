@@ -23,16 +23,16 @@ public class ParentPlatformParametric : MonoBehaviour, IPolarizeable {
     public float yphase;
     public float yshift;
 
-	private float[] initCondictions;
+	private float[] initConditions;
 	private float[] currentConditions;
 	private float[] futureConditions;
 
     // Use this for initialization
     void Start() {
         LevelManager.getInstance().addPolarizeable(this as IPolarizeable);
-		initCondictions = new float[] {speed, xamp, xfreq, xphase, xshift, yamp, yfreq, yphase, yshift };
-		currentConditions = (float[]) initCondictions.Clone();
-		futureConditions = (float[]) initCondictions.Clone();
+		initConditions = new float[] {speed, xamp, xfreq, xphase, xshift, yamp, yfreq, yphase, yshift };
+		currentConditions = (float[]) initConditions.Clone();
+		futureConditions = (float[]) initConditions.Clone();
 		//futureConditions [6] = 1f;
     }
 
@@ -71,7 +71,7 @@ public class ParentPlatformParametric : MonoBehaviour, IPolarizeable {
     }
 
 	public void reset(){
-		futureConditions = initCondictions;
+		futureConditions = initConditions;
 	}
 
 	public void modify(float[] conditions){
