@@ -49,13 +49,13 @@ public class LevelManager : MonoBehaviour {
             //Debug.Log("AAAA");
             notifyPolarizeables(0);
         }
-        else if (Input.GetKeyDown(KeyCode.Z))
+        else if (Input.GetKeyDown(KeyCode.Z) && CURRENT_FILTER_MODE != 1)
         {
             setFilterMode((int)POLARIZE_FILTER_MODE.HORIZONTAL);
            // notifyPlatforms();
             notifyPolarizeables(1);
         }
-        else if (Input.GetKeyDown(KeyCode.X))
+        else if (Input.GetKeyDown(KeyCode.X) && CURRENT_FILTER_MODE != 2)
         {
             setFilterMode( (int)POLARIZE_FILTER_MODE.VERTICAL );
             //notifyPlatforms();
