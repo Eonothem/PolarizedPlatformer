@@ -16,59 +16,70 @@ public class Player : MonoBehaviour, IDamageable {
 	GameObject currentPlat = null;
     public Vector2 respawn = new Vector2((float)-9.5, (float)-2.1);
 	public GameObject groundCheck;
+	//private bool goDown = false;
+	private bool fastfall = false;
+	private bool jumpTrigger = false;
+
+	//Animator a;
+	//bool down;
 
     //HealthManager hm = null;
 	void Awake(){
 		//QualitySettings.vSyncCount = 0;
-		//Application.targetFrameRate = 60;
+		//Application.targetFrameRate = 30;
 	}
 
 	// Use this for initialization
 	void Start () {
 		rigid = GetComponent<Rigidbody2D> ();
-
+		//a = GetComponent<Animator> ();
         //hm = gameObject.GetComponent<HealthManager>();
     }
 	
-	void Update () {
+	//void Update () {
 		//Debug.Log (groundCheck.GetComponent<GroundCheck> ().getGrounded ());
-	}
-	
-	void FixedUpdate ()
-	{	
-		//Debug.Log (grounded);
-		//Checks if we hit the ground or not using bounding box magic
-		//BoxCollider2D bc = transform.GetComponentInParent<BoxCollider2D> ();
-		//float groundHeight = 1f;
-		//grounded = Physics2D.OverlapArea (new Vector2 (transform.position.x-bc.bounds.extents.x, transform.position.y), new Vector2 (transform.position.x+bc.bounds.extents.x, transform.position.y-groundHeight), whatIsGround);
-		grounded = groundCheck.GetComponent<GroundCheck>().getGrounded();
-		//Debug.Log (grounded);
 
+	//}
+
+	private float movementInput;
+	void Update(){
 		//Get Input
-		float move = Input.GetAxis ("Horizontal");
 
-		//Jump
-		if (Input.GetKeyDown (KeyCode.UpArrow) && grounded) {
-			rigid.velocity = new Vector2(rigid.velocity.x, 20);
-		}
+		movementInput = Input.GetAxis ("Horizontal");
+		if (Input.GetKeyDown (KeyCode.DownArrow)) { fastfall = true; }
+		if (Input.GetKey (KeyCode.UpArrow) && grounded){jumpTrigger = true;};
+		grounded = groundCheck.GetComponent<GroundCheck>().getGrounded();
 
-		if (!grounded) {
-			
-			if (Input.GetKeyDown(KeyCode.DownArrow)){
-				//Debug.Log ("AAAAAA");
-				rigid.velocity = new Vector2 (rigid.velocity.x, -20);
-			}
-		}
-
-		//Move left and right and be affected by gravity
-		rigid.velocity = new Vector2 (move*maxSpeed, rigid.velocity.y);
 
 		//Change direction
-		if (move > 0 && !facingRight) {
+		if (movementInput > 0 && !facingRight) {
 			flip();
-		}else if(move < 0 && facingRight){
+		}else if(movementInput < 0 && facingRight){
 			flip();
 		}
+
+		if (grounded) {
+			fastfall = false;
+		} else {
+			jumpTrigger = false;
+		}
+	}
+
+
+	void FixedUpdate ()
+	{	
+		if (jumpTrigger && grounded) {
+			rigid.velocity = new Vector2(rigid.velocity.x, 20);
+		}
+			
+		if (!grounded && fastfall){
+				rigid.velocity = new Vector2 (rigid.velocity.x, -20);
+
+		}
+
+		rigid.velocity = new Vector2 (movementInput*maxSpeed, rigid.velocity.y);
+
+
 	}
 
 	void flip(){
