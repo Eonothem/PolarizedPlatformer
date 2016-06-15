@@ -7,7 +7,8 @@
 [Ll]ibrary/
 sysinfo.txt
 *.stackdump
- 
+*.pdb 
+
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
 # ===================================== #
