@@ -72,7 +72,7 @@ public class Player : MonoBehaviour, IDamageable {
 			rigid.velocity = new Vector2(rigid.velocity.x, 20);
 		}
 			
-		if (!grounded && fastfall){
+		if (!grounded && rigid.velocity.y < 0 && fastfall){
 				rigid.velocity = new Vector2 (rigid.velocity.x, -20);
 
 		}
