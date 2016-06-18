@@ -16,11 +16,14 @@ public class Warp : MonoBehaviour {
 	}
 
     void OnTriggerEnter2D(Collider2D coll) {
-        Debug.Log("Warp activated");
-		if (exit != null) {
-			coll.gameObject.transform.position = exit.transform.position;
-		} else {
-			coll.gameObject.transform.position = warpPoint;
-		}
+        GameObject obj = coll.gameObject;
+        if (obj.layer == LayerMask.NameToLayer("Moveable")) {
+            Debug.Log("Warp activated");
+            if (exit != null) {
+                coll.gameObject.transform.position = exit.transform.position;
+            } else {
+                coll.gameObject.transform.position = warpPoint;
+            } 
+        }
     }
 }
