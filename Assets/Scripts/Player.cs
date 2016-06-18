@@ -8,16 +8,16 @@ public class Player : MonoBehaviour, IDamageable {
 	public float maxSpeed = 10f;
 	bool facingRight = true;
 	Rigidbody2D rigid;
-	bool grounded = false;
-	//public Transform groundCheck;
 	float groundRadius = 0.2f;
 	public LayerMask whatIsGround;
 	bool onPlatform = false;
 	GameObject currentPlat = null;
     public Vector2 respawn = new Vector2((float)-9.5, (float)-2.1);
-	public GameObject groundCheck;
-	//private bool goDown = false;
-	private bool fastfall = false;
+	public Transform groundCheckLeft;
+    public Transform groundCheckRight;
+    bool grounded = false;
+    //private bool goDown = false;
+    private bool fastfall = false;
 	private bool jumpTrigger = false;
 
 	//Animator a;
@@ -25,8 +25,10 @@ public class Player : MonoBehaviour, IDamageable {
 
     //HealthManager hm = null;
 	void Awake(){
-		//QualitySettings.vSyncCount = 0;
-		//Application.targetFrameRate = 30;
+        //QualitySettings.vSyncCount = 0;
+        //Application.targetFrameRate = 30;
+        groundCheckLeft = transform.Find("groundCheckLeft");
+        groundCheckRight = transform.Find("groundCheckRight");
 	}
 
 	// Use this for initialization
@@ -48,11 +50,12 @@ public class Player : MonoBehaviour, IDamageable {
 		movementInput = Input.GetAxis ("Horizontal");
 		if (Input.GetKeyDown (KeyCode.DownArrow)) { fastfall = true; }
 		if (Input.GetKey (KeyCode.UpArrow) && grounded){jumpTrigger = true;};
-		grounded = groundCheck.GetComponent<GroundCheck>().getGrounded();
+        grounded = Physics2D.Linecast(transform.position, groundCheckLeft.position, 1 << LayerMask.NameToLayer("Ground")) ||
+                   Physics2D.Linecast(transform.position, groundCheckRight.position, 1 << LayerMask.NameToLayer("Ground"));
 
 
-		//Change direction
-		if (movementInput > 0 && !facingRight) {
+        //Change direction
+        if (movementInput > 0 && !facingRight) {
 			flip();
 		}else if(movementInput < 0 && facingRight){
 			flip();
@@ -69,7 +72,7 @@ public class Player : MonoBehaviour, IDamageable {
 	void FixedUpdate ()
 	{	
 		if (jumpTrigger && grounded) {
-			rigid.velocity = new Vector2(rigid.velocity.x, 20);
+			rigid.velocity = new Vector2(rigid.velocity.x, 15);
 		}
 			
 		if (!grounded && rigid.velocity.y < 0 && fastfall){
