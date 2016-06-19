@@ -49,9 +49,9 @@ public class Player : MonoBehaviour, IDamageable {
 		movementInput = Input.GetAxis ("Horizontal");
 		if (Input.GetKeyDown (KeyCode.DownArrow)) { fastfall = true; }
 		if (Input.GetKey (KeyCode.UpArrow) && grounded){jumpTrigger = true;};
+
         grounded = Physics2D.Linecast(transform.position, groundCheckBack.position, 1 << LayerMask.NameToLayer("Ground")) ||
                    Physics2D.Linecast(transform.position, groundCheckForward.position, 1 << LayerMask.NameToLayer("Ground"));
-
 
         //Change direction
         if (movementInput > 0 && !facingRight) {
