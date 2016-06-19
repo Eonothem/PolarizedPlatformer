@@ -8,13 +8,12 @@ public class Player : MonoBehaviour, IDamageable {
 	public float maxSpeed = 10f;
 	bool facingRight = true;
 	Rigidbody2D rigid;
-	float groundRadius = 0.2f;
-	public LayerMask whatIsGround;
+	//float groundRadius = 0.2f;
 	bool onPlatform = false;
 	GameObject currentPlat = null;
     public Vector2 respawn = new Vector2((float)-9.5, (float)-2.1);
-	public Transform groundCheckLeft;
-    public Transform groundCheckRight;
+	public Transform groundCheckBack;
+    public Transform groundCheckForward;
     bool grounded = false;
     //private bool goDown = false;
     private bool fastfall = false;
@@ -27,8 +26,8 @@ public class Player : MonoBehaviour, IDamageable {
 	void Awake(){
         //QualitySettings.vSyncCount = 0;
         //Application.targetFrameRate = 30;
-        groundCheckLeft = transform.Find("groundCheckLeft");
-        groundCheckRight = transform.Find("groundCheckRight");
+        groundCheckBack = transform.Find("groundCheckBack");
+        groundCheckForward = transform.Find("groundCheckForward");
 	}
 
 	// Use this for initialization
@@ -50,8 +49,8 @@ public class Player : MonoBehaviour, IDamageable {
 		movementInput = Input.GetAxis ("Horizontal");
 		if (Input.GetKeyDown (KeyCode.DownArrow)) { fastfall = true; }
 		if (Input.GetKey (KeyCode.UpArrow) && grounded){jumpTrigger = true;};
-        grounded = Physics2D.Linecast(transform.position, groundCheckLeft.position, 1 << LayerMask.NameToLayer("Ground")) ||
-                   Physics2D.Linecast(transform.position, groundCheckRight.position, 1 << LayerMask.NameToLayer("Ground"));
+        grounded = Physics2D.Linecast(transform.position, groundCheckBack.position, 1 << LayerMask.NameToLayer("Ground")) ||
+                   Physics2D.Linecast(transform.position, groundCheckForward.position, 1 << LayerMask.NameToLayer("Ground"));
 
 
         //Change direction

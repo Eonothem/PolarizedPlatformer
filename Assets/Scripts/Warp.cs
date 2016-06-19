@@ -12,7 +12,6 @@ public class Warp : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		Debug.Log (exit == null);
 	}
 
     void OnTriggerEnter2D(Collider2D coll) {
