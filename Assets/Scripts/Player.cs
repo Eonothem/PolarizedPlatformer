@@ -47,7 +47,7 @@ public class Player : MonoBehaviour, IDamageable {
 		//Get Input
 
 		movementInput = Input.GetAxis ("Horizontal");
-		if (Input.GetKeyDown (KeyCode.DownArrow)) { fastfall = true; }
+		if (Input.GetKey (KeyCode.DownArrow) && rigid.velocity.y < 0) { fastfall = true; }
 		if (Input.GetKey (KeyCode.UpArrow) && grounded){jumpTrigger = true;};
 
         grounded = Physics2D.Linecast(transform.position, groundCheckBack.position, 1 << LayerMask.NameToLayer("Ground")) ||
