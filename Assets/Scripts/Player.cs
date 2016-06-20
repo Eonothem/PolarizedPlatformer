@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class Player : MonoBehaviour, IDamageable {
-
+	public AudioClip hit;
     public const int maxHealth = 3;
     int health = maxHealth;
 	public float maxSpeed = 10f;
@@ -113,10 +113,15 @@ public class Player : MonoBehaviour, IDamageable {
 
     void OnTriggerEnter2D(Collider2D coll) {
         //Debug.Log("Player collided with trigger");
-        if (coll.gameObject.tag == "Hazard") {
-            StageHazard haz = coll.gameObject.GetComponent<StageHazard>();
-            damage(haz.damage);
-        }
+		if (coll.gameObject.tag == "Hazard") {
+			StageHazard haz = coll.gameObject.GetComponent<StageHazard> ();
+
+			damage (haz.damage);
+		} else if (coll.gameObject.tag == "Projectile") {
+			Debug.Log ("AAA");
+			gameObject.GetComponent<AudioSource> ().PlayOneShot (hit);
+			GameObject.Find ("Main Camera").GetComponent<CameraShake> ().shakeCamera (0.02f);
+		}
     }
 
     public void damage(int damage) {

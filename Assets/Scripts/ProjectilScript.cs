@@ -14,6 +14,15 @@ public class ProjectilScript : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D coll) {
-		Destroy (gameObject);
+		
+
+	}
+
+	void OnTriggerEnter2D(Collider2D coll){
+		//Debug.Log ("AA");
+
+		if (coll.gameObject.tag == "Player") {
+			Destroy (gameObject);
+		}
 	}
 }
