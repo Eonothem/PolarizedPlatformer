@@ -16,6 +16,7 @@ public class ReflectorControl : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		
 		//if () {
 		bool reflectDown = Input.GetKey(KeyCode.Space);
 		if(Input.GetKeyDown(KeyCode.Space)){
@@ -50,11 +51,36 @@ public class ReflectorControl : MonoBehaviour {
 				gameObject.GetComponent<AudioSource> ().PlayOneShot (perfectParry);
 				coll.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2 (-vel.x+10, vel.y);
 
+
+				StartCoroutine("MatrixEffect");
+				GameObject.Find ("Main Camera").GetComponent<CameraShake> ().shakeCamera (0.3f);
+
 			} else {
-				Debug.Log ("Regular Reflect.");
+				//Debug.Log ("Regular Reflect.");
 				coll.gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (-vel.x, vel.y);
 			}
 		}
+	}
+
+	IEnumerator MatrixEffect() {
+		//float newTimeScale = 0.005f;
+		AudioSource a = GameObject.Find ("MusicManager").GetComponent<AudioSource>();
+
+		for (float f = 0.005f; f < 1f; f *= 1.2f) {
+			if (Mathf.Abs(f - 0.01f) == 1f) {
+				//f == 1f;
+			}
+			//Debug.Log (f);
+			a.pitch = f;
+			Time.timeScale = f;
+			Time.fixedDeltaTime*=f;
+			yield return null;
+
+		}
+
+		a.pitch = 1;
+		Time.timeScale = 1;
+		Time.fixedDeltaTime*=1;
 	}
 }
 

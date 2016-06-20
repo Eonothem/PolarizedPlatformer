@@ -11,11 +11,14 @@ public class CameraShake : MonoBehaviour
 	private float shakeTime = 0;
 	private float addShake = 0;
 	private float currentTime = 0;
-	public float shakeFalloff = 0.95f;
+	public float shakeFalloff = 0;
 
 	Vector2 originPosition;
+	Vector3 og;
 	void Awake(){
-		//shakeCamera (1f);
+		//shakeCamera (5f);
+		//originPosition = transform.position;
+		og = transform.position;
 	}
 	void Update ()
 	{
@@ -51,7 +54,7 @@ public class CameraShake : MonoBehaviour
 		//Because lol unity and 1.234*10^-24
 		if (globalShake <= .001) {
 			globalShake = 0;
-			//transform.position = originPosition;
+			transform.position = og;
 		}
 	}
 

@@ -118,7 +118,7 @@ public class Player : MonoBehaviour, IDamageable {
 
 			damage (haz.damage);
 		} else if (coll.gameObject.tag == "Projectile") {
-			Debug.Log ("AAA");
+			//Debug.Log ("AAA");
 			gameObject.GetComponent<AudioSource> ().PlayOneShot (hit);
 			GameObject.Find ("Main Camera").GetComponent<CameraShake> ().shakeCamera (0.02f);
 		}
