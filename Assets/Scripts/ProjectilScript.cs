@@ -14,15 +14,15 @@ public class ProjectilScript : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D coll) {
-		
-
+		if (coll.gameObject.tag != "Reflector") {
+			Destroy (gameObject);
+		}
+		//Debug.Log (coll.gameObject.tag);
 	}
 
 	void OnTriggerEnter2D(Collider2D coll){
 		//Debug.Log ("AA");
 
-		if (coll.gameObject.tag == "Player") {
-			Destroy (gameObject);
-		}
+
 	}
 }

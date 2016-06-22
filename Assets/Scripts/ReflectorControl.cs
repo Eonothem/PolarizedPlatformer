@@ -9,9 +9,14 @@ public class ReflectorControl : MonoBehaviour {
 	//float timeReflected = 0;
 	int framesReflected = 0;
 	public int perfectParryFrameTime = 5;
+	public GameObject player;
 	// Use this for initialization
 	void Start () {
 		a = GetComponent<Animator> ();
+		//Time.timeScale = 0.1f;
+		//Time.fixedDeltaTime*=0.1f;
+		//game
+		Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), player.GetComponent<Collider2D>());
 	}
 	
 	// Update is called once per frame
@@ -37,27 +42,26 @@ public class ReflectorControl : MonoBehaviour {
 
 	}
 
-	void OnTriggerEnter2D(Collider2D coll){
+	void OnCollisionEnter2D(Collision2D coll){
 		if (coll.gameObject.tag == "Projectile") {
-			//Debug.Log ("AAA");
-			//Debug.Log(framesReflected);
-			Vector2 vel = coll.gameObject.GetComponent<Rigidbody2D> ().velocity;
+			
+
+			Vector2 norm = coll.contacts[0].normal;
+
 			gameObject.GetComponent<AudioSource> ().PlayOneShot (regularHit);
-			//Debug.Log (vel);
+		
 			if (framesReflected < perfectParryFrameTime) {
-				Debug.Log ("Perfect Reflect!");
-				//Time.timeScale = 0.2f;
-				//Time.fixedDeltaTime*=0.2f;
+				
 				gameObject.GetComponent<AudioSource> ().PlayOneShot (perfectParry);
-				coll.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2 (-vel.x+10, vel.y);
 
 
-				StartCoroutine("MatrixEffect");
 				GameObject.Find ("Main Camera").GetComponent<CameraShake> ().shakeCamera (0.3f);
+				coll.gameObject.GetComponent<Rigidbody2D>().AddForce(-norm*1200f);
+
 
 			} else {
 				//Debug.Log ("Regular Reflect.");
-				coll.gameObject.GetComponent<Rigidbody2D> ().velocity = new Vector2 (-vel.x, vel.y);
+				coll.gameObject.GetComponent<Rigidbody2D>().AddForce(-norm*800f);
 			}
 		}
 	}
@@ -67,10 +71,10 @@ public class ReflectorControl : MonoBehaviour {
 		AudioSource a = GameObject.Find ("MusicManager").GetComponent<AudioSource>();
 
 		for (float f = 0.005f; f < 1f; f *= 1.2f) {
-			if (Mathf.Abs(f - 0.01f) == 1f) {
+			//if (Mathf.Abs(f - 0.01f) == 1f) {
 				//f == 1f;
-			}
-			//Debug.Log (f);
+			//}
+			Debug.Log (f);
 			a.pitch = f;
 			Time.timeScale = f;
 			Time.fixedDeltaTime*=f;

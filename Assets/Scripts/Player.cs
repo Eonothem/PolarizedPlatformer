@@ -99,6 +99,10 @@ public class Player : MonoBehaviour, IDamageable {
 			onPlatform = true;
            transform.parent = coll.gameObject.transform;
 		}
+
+		if (coll.gameObject.tag == "Projectile") {
+			//Destroy (coll.gameObject);
+		}
 	}
 
 	void OnCollisionExit2D(Collision2D coll) {
