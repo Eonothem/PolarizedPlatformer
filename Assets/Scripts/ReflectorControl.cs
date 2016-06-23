@@ -53,7 +53,7 @@ public class ReflectorControl : MonoBehaviour {
 				playerAudioSource.PlayOneShot(playerAudioFiles.perfectReflect);
 
 				GameObject.Find ("Main Camera").GetComponent<CameraShake> ().shakeCamera (0.3f);
-				coll.gameObject.GetComponent<Rigidbody2D>().AddForce(-norm*1200f);
+				coll.gameObject.GetComponent<Rigidbody2D>().AddForce(-norm*2500f*100f);
 				StartCoroutine ("MatrixEffect");
 
 				//Debug.Log(-norm);
@@ -70,9 +70,9 @@ public class ReflectorControl : MonoBehaviour {
 		//AudioSource a = GameObject.Find ("MusicManager").GetComponent<AudioSource>();
 
 		//Wait two frames before we start the effect so that the physics can register
-		for (int i = 0; i < 2; i++) {
-			yield return null;
-		}
+		//for (int i = 0; i < 2; i++) {
+			//yield return null;
+		//}
 
 		for (float f = 0.005f; f < 1f; f *= 1.2f) {
 			
