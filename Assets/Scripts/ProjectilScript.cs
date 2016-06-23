@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class ProjectilScript : MonoBehaviour {
-
+	public int damage = 1;
 	// Use this for initialization
 	void Start () {
 	
@@ -22,7 +22,5 @@ public class ProjectilScript : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D coll){
 		//Debug.Log ("AA");
-
-
 	}
 }

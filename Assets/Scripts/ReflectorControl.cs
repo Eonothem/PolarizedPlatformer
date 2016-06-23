@@ -2,43 +2,39 @@
 using System.Collections;
 
 public class ReflectorControl : MonoBehaviour {
+	public GameObject player;
+
 	Animator a;
-	public AudioClip regularHit;
-	public AudioClip perfectParry;
-	public AudioClip reflectorUp;
-	//float timeReflected = 0;
+
+	public GameObject playerAudioManager;
+	private AudioSource playerAudioSource;
+	private PlayerAudioFiles playerAudioFiles;
+
 	int framesReflected = 0;
 	public int perfectParryFrameTime = 5;
-	public GameObject player;
+
+
 	// Use this for initialization
 	void Start () {
 		a = GetComponent<Animator> ();
-		//Time.timeScale = 0.1f;
-		//Time.fixedDeltaTime*=0.1f;
-		//game
+
+		playerAudioSource = playerAudioManager.GetComponent<AudioSource>();
+		playerAudioFiles = playerAudioManager.GetComponent<PlayerAudioFiles> ();
+
 		Physics2D.IgnoreCollision(gameObject.GetComponent<Collider2D>(), player.GetComponent<Collider2D>());
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
-		//if () {
 		bool reflectDown = Input.GetKey(KeyCode.Space);
-		if(Input.GetKeyDown(KeyCode.Space)){
-
-			gameObject.GetComponent<AudioSource> ().PlayOneShot (reflectorUp);
-		}
 
 		if (reflectDown) {
 			framesReflected += 1;
 		} else {
 			framesReflected = 0;
 		}
-		//Debug.Log (d);
 		a.SetBool ("isActive", reflectDown);
-		//}
-
-		//Debug.Log (timeReflected);
 
 	}
 
@@ -48,19 +44,17 @@ public class ReflectorControl : MonoBehaviour {
 
 			Vector2 norm = coll.contacts[0].normal;
 
-			gameObject.GetComponent<AudioSource> ().PlayOneShot (regularHit);
+			playerAudioSource.PlayOneShot(playerAudioFiles.reflect);
 		
 			if (framesReflected < perfectParryFrameTime) {
 				
-				gameObject.GetComponent<AudioSource> ().PlayOneShot (perfectParry);
-
+				playerAudioSource.PlayOneShot(playerAudioFiles.perfectReflect);
 
 				GameObject.Find ("Main Camera").GetComponent<CameraShake> ().shakeCamera (0.3f);
 				coll.gameObject.GetComponent<Rigidbody2D>().AddForce(-norm*1200f);
 
 
 			} else {
-				//Debug.Log ("Regular Reflect.");
 				coll.gameObject.GetComponent<Rigidbody2D>().AddForce(-norm*800f);
 			}
 		}

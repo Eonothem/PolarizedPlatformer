@@ -2,7 +2,12 @@
 using System.Collections;
 
 public class Player : MonoBehaviour, IDamageable {
-	public AudioClip hit;
+	//public AudioClip hit;
+	public GameObject playerAudioManager;
+	private AudioSource playerAudioSource;
+	private PlayerAudioFiles playerAudioFiles;
+
+
     public const int maxHealth = 3;
     int health = maxHealth;
 	public float maxSpeed = 10f;
@@ -26,13 +31,16 @@ public class Player : MonoBehaviour, IDamageable {
 	void Awake(){
         //QualitySettings.vSyncCount = 0;
         //Application.targetFrameRate = 30;
-        groundCheckBack = transform.Find("groundCheckBack");
-        groundCheckForward = transform.Find("groundCheckForward");
+       // groundCheckBack = transform.Find("groundCheckBack");
+      //  groundCheckForward = transform.Find("groundCheckForward");
 	}
 
 	// Use this for initialization
 	void Start () {
 		rigid = GetComponent<Rigidbody2D> ();
+
+		playerAudioSource = playerAudioManager.GetComponent<AudioSource>();
+		playerAudioFiles = playerAudioManager.GetComponent<PlayerAudioFiles> ();
 		//a = GetComponent<Animator> ();
         //hm = gameObject.GetComponent<HealthManager>();
     }
@@ -101,7 +109,9 @@ public class Player : MonoBehaviour, IDamageable {
 		}
 
 		if (coll.gameObject.tag == "Projectile") {
-			//Destroy (coll.gameObject);
+			playerAudioSource.PlayOneShot(playerAudioFiles.hurt);
+			GameObject.Find ("Main Camera").GetComponent<CameraShake> ().shakeCamera (0.02f);
+			damage (coll.gameObject.GetComponent<ProjectilScript> ().damage);
 		}
 	}
 
@@ -119,12 +129,7 @@ public class Player : MonoBehaviour, IDamageable {
         //Debug.Log("Player collided with trigger");
 		if (coll.gameObject.tag == "Hazard") {
 			StageHazard haz = coll.gameObject.GetComponent<StageHazard> ();
-
 			damage (haz.damage);
-		} else if (coll.gameObject.tag == "Projectile") {
-			//Debug.Log ("AAA");
-			gameObject.GetComponent<AudioSource> ().PlayOneShot (hit);
-			GameObject.Find ("Main Camera").GetComponent<CameraShake> ().shakeCamera (0.02f);
 		}
     }
 
@@ -139,6 +144,7 @@ public class Player : MonoBehaviour, IDamageable {
 
     public void kill() {
         Debug.Log("Died!");
+		playerAudioSource.PlayOneShot(playerAudioFiles.die);
         transform.position = respawn;
         rigid.velocity.Set(0, 0);
 
