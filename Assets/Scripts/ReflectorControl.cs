@@ -13,11 +13,13 @@ public class ReflectorControl : MonoBehaviour {
 	int framesReflected = 0;
 	public int perfectParryFrameTime = 5;
 
+	//float initFixedTS = Time.fixedDeltaTime;
+
 
 	// Use this for initialization
 	void Start () {
 		a = GetComponent<Animator> ();
-
+		Debug.Log (Time.fixedDeltaTime);
 		playerAudioSource = playerAudioManager.GetComponent<AudioSource>();
 		playerAudioFiles = playerAudioManager.GetComponent<PlayerAudioFiles> ();
 
@@ -45,13 +47,16 @@ public class ReflectorControl : MonoBehaviour {
 			Vector2 norm = coll.contacts[0].normal;
 
 			playerAudioSource.PlayOneShot(playerAudioFiles.reflect);
-		
+
 			if (framesReflected < perfectParryFrameTime) {
 				
 				playerAudioSource.PlayOneShot(playerAudioFiles.perfectReflect);
 
 				GameObject.Find ("Main Camera").GetComponent<CameraShake> ().shakeCamera (0.3f);
 				coll.gameObject.GetComponent<Rigidbody2D>().AddForce(-norm*1200f);
+				StartCoroutine ("MatrixEffect");
+
+				//Debug.Log(-norm);
 
 
 			} else {
@@ -62,23 +67,30 @@ public class ReflectorControl : MonoBehaviour {
 
 	IEnumerator MatrixEffect() {
 		//float newTimeScale = 0.005f;
-		AudioSource a = GameObject.Find ("MusicManager").GetComponent<AudioSource>();
+		//AudioSource a = GameObject.Find ("MusicManager").GetComponent<AudioSource>();
+
+		//Wait two frames before we start the effect so that the physics can register
+		for (int i = 0; i < 2; i++) {
+			yield return null;
+		}
 
 		for (float f = 0.005f; f < 1f; f *= 1.2f) {
-			//if (Mathf.Abs(f - 0.01f) == 1f) {
-				//f == 1f;
-			//}
-			Debug.Log (f);
-			a.pitch = f;
+			
 			Time.timeScale = f;
 			Time.fixedDeltaTime*=f;
 			yield return null;
 
 		}
 
-		a.pitch = 1;
+		//a.pitch = 1;
+		//Time.timeScale = 1;
+		resetTimeScale();
+		//Time.fixedDeltaTime*=1;
+	}
+
+	public void resetTimeScale(){
 		Time.timeScale = 1;
-		Time.fixedDeltaTime*=1;
+		Time.fixedDeltaTime = 0.02f;
 	}
 }
 
