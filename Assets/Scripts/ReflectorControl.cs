@@ -6,6 +6,9 @@ public class ReflectorControl : MonoBehaviour {
 
 	Animator a;
 
+
+	public int maxHealth = 10;
+	public int currentHealth = 5;
 	public GameObject playerAudioManager;
 	private AudioSource playerAudioSource;
 	private PlayerAudioFiles playerAudioFiles;
@@ -61,8 +64,21 @@ public class ReflectorControl : MonoBehaviour {
 
 			} else {
 				coll.gameObject.GetComponent<Rigidbody2D>().AddForce(-norm*800f);
+				damageReflector (coll.gameObject.GetComponent<ProjectilScript> ().damage);
 			}
 		}
+	}
+
+	public void damageReflector(int damage){
+		currentHealth-=damage;
+		Debug.Log ("Reflector took "+damage+" damage!");
+		if (currentHealth <= 0) {
+			breakReflector ();
+		}
+	}
+
+	public void breakReflector(){
+		Debug.Log ("Reflector Broken!");
 	}
 
 	IEnumerator MatrixEffect() {
