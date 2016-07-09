@@ -31,8 +31,8 @@ public class Player : MonoBehaviour, IDamageable {
 	void Awake(){
         //QualitySettings.vSyncCount = 0;
         //Application.targetFrameRate = 30;
-       // groundCheckBack = transform.Find("groundCheckBack");
-      //  groundCheckForward = transform.Find("groundCheckForward");
+          groundCheckBack = transform.Find("groundCheckBack");
+          groundCheckForward = transform.Find("groundCheckForward");
 	}
 
 	// Use this for initialization
@@ -60,6 +60,7 @@ public class Player : MonoBehaviour, IDamageable {
 
         grounded = Physics2D.Linecast(transform.position, groundCheckBack.position, 1 << LayerMask.NameToLayer("Ground")) ||
                    Physics2D.Linecast(transform.position, groundCheckForward.position, 1 << LayerMask.NameToLayer("Ground"));
+        Debug.Log("grounded? " + grounded);
 
         //Change direction
         if (movementInput > 0 && !facingRight) {
@@ -109,8 +110,6 @@ public class Player : MonoBehaviour, IDamageable {
 		}
 
 		if (coll.gameObject.tag == "Projectile") {
-			playerAudioSource.PlayOneShot(playerAudioFiles.hurt);
-			GameObject.Find ("Main Camera").GetComponent<CameraShake> ().shakeCamera (0.02f);
 			damage (coll.gameObject.GetComponent<ProjectilScript> ().damage);
 		}
 	}
@@ -136,17 +135,21 @@ public class Player : MonoBehaviour, IDamageable {
     public void damage(int damage) {
         health -= damage;
         Debug.Log("Took " + damage + " damage");
+        GameObject.Find("Main Camera").GetComponent<CameraShake>().shakeCamera(0.02f);
         if (health <= 0) {
             health = 0;
             kill();
+        } else {
+            playerAudioSource.PlayOneShot(playerAudioFiles.hurt);
         }
+
     }
 
     public void kill() {
         Debug.Log("Died!");
 		playerAudioSource.PlayOneShot(playerAudioFiles.die);
         transform.position = respawn;
-        rigid.velocity.Set(0, 0);
+        rigid.velocity = Vector2.zero;
 
         health = maxHealth;
     }
