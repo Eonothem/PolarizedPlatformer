@@ -60,7 +60,7 @@ public class Player : MonoBehaviour, IDamageable {
 
         grounded = Physics2D.Linecast(transform.position, groundCheckBack.position, 1 << LayerMask.NameToLayer("Ground")) ||
                    Physics2D.Linecast(transform.position, groundCheckForward.position, 1 << LayerMask.NameToLayer("Ground"));
-        Debug.Log("grounded? " + grounded);
+        //Debug.Log("grounded? " + grounded);
 
         //Change direction
         if (movementInput > 0 && !facingRight) {

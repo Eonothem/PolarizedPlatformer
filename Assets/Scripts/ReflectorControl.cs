@@ -8,12 +8,14 @@ public class ReflectorControl : MonoBehaviour {
 
 
 	public int maxHealth = 10;
-	public int currentHealth = 5;
+	public int currentHealth = 1;
 	public GameObject playerAudioManager;
 	private AudioSource playerAudioSource;
 	private PlayerAudioFiles playerAudioFiles;
+	public bool broken = false;
 
 	int framesReflected = 0;
+	public int framesSinceLastHit = 100;
 	public int perfectParryFrameTime = 5;
 
 	//float initFixedTS = Time.fixedDeltaTime;
@@ -30,18 +32,48 @@ public class ReflectorControl : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
+	void Awake(){
+		StartCoroutine ("RegenReflector");
+		Debug.Log ("Awake");
+	}
 	void Update () {
-		
+
+
 		bool reflectDown = Input.GetKey(KeyCode.Space);
 
+		if (broken) {
+			reflectDown = false;
+		}
 		if (reflectDown) {
 			framesReflected += 1;
 		} else {
 			framesReflected = 0;
 		}
+		framesSinceLastHit += 1;
 		a.SetBool ("isActive", reflectDown);
+		//Debug.Log (framesSinceLastHit);
 
 	}
+
+	IEnumerator RegenReflector() {
+		
+		while (true) {
+			if (currentHealth < maxHealth && !broken && framesSinceLastHit > 120) {
+				currentHealth++;
+				Debug.Log ("Regen");
+				yield return new WaitForSeconds(1f);
+			}
+
+			if (broken) {
+				yield return new WaitForSeconds(4f);
+				broken = false;
+			}
+			//currentHealth++;
+			//Debug.Log (framesSinceLastHit > 60);
+			yield return null;
+		}
+	}
+
 
 	void OnCollisionEnter2D(Collision2D coll){
 		if (coll.gameObject.tag == "Projectile") {
@@ -66,6 +98,7 @@ public class ReflectorControl : MonoBehaviour {
 				coll.gameObject.GetComponent<Rigidbody2D>().AddForce(-norm*800f);
 				damageReflector (coll.gameObject.GetComponent<ProjectilScript> ().damage);
 			}
+			framesSinceLastHit = 0;
 		}
 	}
 
@@ -79,7 +112,10 @@ public class ReflectorControl : MonoBehaviour {
 
 	public void breakReflector(){
 		Debug.Log ("Reflector Broken!");
+		broken = true;
+		//StartCoroutine ("reflectorRecharge");
 	}
+
 
 	IEnumerator MatrixEffect() {
 		//float newTimeScale = 0.005f;

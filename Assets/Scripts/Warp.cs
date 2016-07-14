@@ -16,7 +16,7 @@ public class Warp : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D coll) {
         GameObject obj = coll.gameObject;
-        if (obj.layer == LayerMask.NameToLayer("Moveable")) {
+		if (obj.layer == LayerMask.NameToLayer("Player") || obj.layer == LayerMask.NameToLayer("Enemies") || obj.layer == LayerMask.NameToLayer("Moveable")) {
             Debug.Log("Warp activated");
             if (exit != null) {
                 coll.gameObject.transform.position = exit.transform.position;
