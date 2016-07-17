@@ -8,7 +8,7 @@ public class ReflectorControl : MonoBehaviour {
 
 
 	public int maxHealth = 10;
-	public int currentHealth = 1;
+	public int currentHealth = 5;
 	public GameObject playerAudioManager;
 	private AudioSource playerAudioSource;
 	private PlayerAudioFiles playerAudioFiles;
@@ -17,6 +17,9 @@ public class ReflectorControl : MonoBehaviour {
 	int framesReflected = 0;
 	public int framesSinceLastHit = 100;
 	public int perfectParryFrameTime = 5;
+
+    public const float reflectForceMultiplier = 7f;
+    public const float perfectParryMultiplier = 350f;
 
 	//float initFixedTS = Time.fixedDeltaTime;
 
@@ -77,28 +80,28 @@ public class ReflectorControl : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D coll){
 		if (coll.gameObject.tag == "Projectile") {
-			
-
 			Vector2 norm = coll.contacts[0].normal;
+            Vector2 reflectForce = -norm * reflectForceMultiplier;
 
-			playerAudioSource.PlayOneShot(playerAudioFiles.reflect);
+            playerAudioSource.PlayOneShot(playerAudioFiles.reflect);
 
 			if (framesReflected < perfectParryFrameTime) {
 				
 				playerAudioSource.PlayOneShot(playerAudioFiles.perfectReflect);
 
 				GameObject.Find ("Main Camera").GetComponent<CameraShake> ().shakeCamera (0.3f);
-				coll.gameObject.GetComponent<Rigidbody2D>().AddForce(-norm*2500f*100f);
+                reflectForce = reflectForce * perfectParryMultiplier;
 				StartCoroutine ("MatrixEffect");
 
 				//Debug.Log(-norm);
 
 
 			} else {
-				coll.gameObject.GetComponent<Rigidbody2D>().AddForce(-norm*800f);
 				damageReflector (coll.gameObject.GetComponent<ProjectilScript> ().damage);
 			}
-			framesSinceLastHit = 0;
+
+            coll.gameObject.GetComponent<Rigidbody2D>().AddForce(reflectForce);
+            framesSinceLastHit = 0;
 		}
 	}
 
@@ -106,16 +109,20 @@ public class ReflectorControl : MonoBehaviour {
 		currentHealth-=damage;
 		Debug.Log ("Reflector took "+damage+" damage!");
 		if (currentHealth <= 0) {
-			breakReflector ();
+			breakReflector();
 		}
 	}
 
-	public void breakReflector(){
+	public void breakReflector() {
 		Debug.Log ("Reflector Broken!");
 		broken = true;
 		//StartCoroutine ("reflectorRecharge");
 	}
 
+    public void restoreReflector() {
+        broken = false;
+        currentHealth = 5;
+    }
 
 	IEnumerator MatrixEffect() {
 		//float newTimeScale = 0.005f;

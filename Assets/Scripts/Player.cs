@@ -7,6 +7,7 @@ public class Player : MonoBehaviour, IDamageable {
 	private AudioSource playerAudioSource;
 	private PlayerAudioFiles playerAudioFiles;
 
+    public ReflectorControl reflector;
 
     public const int maxHealth = 3;
     int health = maxHealth;
@@ -41,6 +42,7 @@ public class Player : MonoBehaviour, IDamageable {
 
 		playerAudioSource = playerAudioManager.GetComponent<AudioSource>();
 		playerAudioFiles = playerAudioManager.GetComponent<PlayerAudioFiles> ();
+        reflector = GetComponentInChildren<ReflectorControl>();
 		//a = GetComponent<Animator> ();
         //hm = gameObject.GetComponent<HealthManager>();
     }
@@ -152,5 +154,6 @@ public class Player : MonoBehaviour, IDamageable {
         rigid.velocity = Vector2.zero;
 
         health = maxHealth;
+        reflector.restoreReflector();
     }
 } 
